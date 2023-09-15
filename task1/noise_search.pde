@@ -40,9 +40,14 @@ void draw() {
         pixels[j*width+i] = color(red, GREEN_SKY, BLUE_SKY);
     }
   }
-  
 
-  for (int i = 0; i < pointsToDraw.size()/2; i++) {
+  if (random(0, 1) < 0.2) {
+    pointsToDraw.add((int) random(0, width-5));
+    pointsToDraw.add((int) random(0, height-5));
+  }
+  
+  int initialSize = pointsToDraw.size();
+  for (int i = 0; i < initialSize/2; i++) {
     int x = pointsToDraw.remove();
     int y = pointsToDraw.remove();
 
@@ -50,11 +55,13 @@ void draw() {
     // square(x, y, 5);
     for (int j = 0; j < 5; j++) {
       for (int k = 0; k < 5; k++) {
-        pixels[(k+y)*width+(j+x)] = color(0, 255, 0);
+        if (x+j > 0 && y+k > 0) {
+          pixels[(k+y)*width+(j+x)] = color(0, 255, 0);
+        }
       }
     }
 
-    if (x-5 > 0 && y-5 > 0) {
+    if (x > 0 && y > 0) {
       pointsToDraw.add(x-5);
       pointsToDraw.add(y-5);
     }
