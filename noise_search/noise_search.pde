@@ -81,8 +81,8 @@ boolean withinBounds(int x, int y) {
 }
 
 void setup() {
-    size(512, 512);
-    // fullScreen();
+    //size(512, 512);
+    fullScreen();
     bgNoise = new BrownNoise(this);
     bgNoise.play();
     bgNoise.amp(0.003);
