@@ -3,4 +3,4 @@ Type=Application
 Name=Wired        
 Comment=Wired Generative Art          
 NoDisplay=false
-Exec=/home/student334/processing-4.3/processing-java --sketch=/home/student334/cpsc334/module1-revised/noise_search --run
+Exec=/home/student334/processing-4.3/processing-java --sketch=/home/student334/cpsc334/module1-revised/noise_search --present
