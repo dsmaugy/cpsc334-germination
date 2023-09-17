@@ -13,6 +13,7 @@ int BLUE_SKY = 29;
 int iteration = 0;
 int delayTime = 10;
 int timeSinceBgDraw = -delayTime;
+int extinctionThreshold = 20; // start an extinction event once drawing all the points begins to take too long
 
 // geometry
 int blockSize = 5;
@@ -77,26 +78,30 @@ boolean withinBounds(int x, int y) {
 }
 
 void setup() {
-  size(2000, 2000);
-  // fullScreen();
+  // size(100, 100);
+  fullScreen();
   int numClusters;
   // set update speed based on screen dimensions 
-  // TODO: set new head generation rate based off screen size
   if (width <= 128 || height <= 128) {
     delayTime = 10;
     numClusters = 5;
+    extinctionThreshold = 0;
   } else if (width <= 256 || height <= 256) {
     delayTime = 50;
     numClusters = 8;
+    extinctionThreshold = 0;
   } else if (width <= 512 || height <= 512) {
     delayTime = 100;
     numClusters = 10;
+    extinctionThreshold = 3;
   } else if (width <= 1024 || height <= 1024) {
-    delayTime = 750;
+    delayTime = 2000;
     numClusters = 20;
+    extinctionThreshold = 10;
   } else {
-    delayTime = 2500;
+    delayTime = 6000;
     numClusters = 25;
+    extinctionThreshold = 20;
   }
   // set the timer back so that we draw right away on first frame
   timeSinceBgDraw = -delayTime - 5;
@@ -151,24 +156,21 @@ void drawBackground() {
   timeSinceBgDraw = millis();
 }
 
-
-void draw() {
-  loadPixels();
-
-  if (millis() - timeSinceBgDraw > delayTime) {
-    drawBackground();
-  }
-
-  int start = millis();
+void moveHeads() {
   int startingHeadNum = searchHeads.size();
   for (int i = 0; i < startingHeadNum; i++) {
     SearchHead head = searchHeads.get(i);
+
+    if (random(0, 1) < 0.001) {
+      head.currX = int(random(0, width));
+      head.currY = int(random(0, height));
+    }
     head.moveOnRandomPath();
 
     pointsToDraw.add(head.currX);
     pointsToDraw.add(head.currY);
 
-    if (random(0, 1) < 0.001) {
+    if (random(0, 1) < 0.01) {  // 0.001
       searchHeads.add(new SearchHead(head.currX, head.currY));
     }
 
@@ -180,13 +182,43 @@ void draw() {
     }
   }
 
-  if (random(0, 1) < 0.001) {
+  if (random(0, 1) < 0.1) {
     searchHeads.add(new SearchHead(int(random(0, width)), int(random(0, height))));
   }
+}
+
+
+void draw() {
+  loadPixels();
+
+  if (millis() - timeSinceBgDraw > delayTime) {
+    drawBackground();
+  }
+
+  int start = millis();
+  moveHeads();
   animatePoints();
   int end = millis();
   println(end-start);
 
+  // kill many points
+  println("Points: " + pointsToDraw.size());
+  if (end-start > extinctionThreshold || pointsToDraw.size() > (3.0/5.0)*width*height) {
+    int removeLimit = int(random(int(searchHeads.size()/2), searchHeads.size()*3/4));
+    int headIdx = searchHeads.size() - 1;
+    for (int i = 0; i < removeLimit; i++) {
+      searchHeads.remove(headIdx);
+      headIdx--;
+    }
+    
+    removeLimit = int(random(int(pointsToDraw.size()/2), pointsToDraw.size()*3/4));
+    removeLimit = removeLimit % 2 == 0 ? removeLimit : removeLimit-1; // ensure it's divisible by 2
+    for (int i = 0; i < removeLimit; i++) {
+      pointsToDraw.remove();
+    }
+  }
+
+  delay(50);
   updatePixels();
   iteration++;
 }
