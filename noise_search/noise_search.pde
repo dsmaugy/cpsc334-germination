@@ -1,4 +1,3 @@
-import processing.sound.*;
 import java.util.ArrayDeque;
 
 // background perlin noise
@@ -16,10 +15,7 @@ int delayTime = 10;
 int timeSinceBgDraw = -delayTime;
 
 // geometry
-int blockSize = 10;
-
-BrownNoise bgNoise;
-
+int blockSize = 5;
 ArrayDeque<Integer> pointsToDraw;
 ArrayList<SearchHead> searchHeads;
 
@@ -68,7 +64,6 @@ class SearchHead {
       } else if (choice == 3) {
         newDir = Direction.DOWN;
       }
-      println(choice);
     }
 
     
@@ -82,24 +77,26 @@ boolean withinBounds(int x, int y) {
 }
 
 void setup() {
-  // size(100, 100);
-  fullScreen();
-  bgNoise = new BrownNoise(this);
-  bgNoise.play();
-  bgNoise.amp(0.003);
-
+  size(2000, 2000);
+  // fullScreen();
+  int numClusters;
   // set update speed based on screen dimensions 
   // TODO: set new head generation rate based off screen size
   if (width <= 128 || height <= 128) {
     delayTime = 10;
+    numClusters = 5;
   } else if (width <= 256 || height <= 256) {
     delayTime = 50;
+    numClusters = 8;
   } else if (width <= 512 || height <= 512) {
     delayTime = 100;
+    numClusters = 10;
   } else if (width <= 1024 || height <= 1024) {
     delayTime = 750;
+    numClusters = 20;
   } else {
     delayTime = 2500;
+    numClusters = 25;
   }
   // set the timer back so that we draw right away on first frame
   timeSinceBgDraw = -delayTime - 5;
@@ -107,7 +104,7 @@ void setup() {
   searchHeads = new ArrayList<SearchHead>();
   pointsToDraw = new ArrayDeque<Integer>();
 
-  for (int j = 0; j < 10; j++) {
+  for (int j = 0; j < numClusters; j++) {
     int clusterWidth = int(random(0, width));
     int clusterHeight = int(random(0, height));
     for (int i = 0; i < 5; i++) {
@@ -132,7 +129,8 @@ void animatePoints() {
         }
       }
     }
-  
+
+    // add some chance that we don't re-draw this point again
     if (withinBounds(x, y) && random(0, 1) < 0.65) {
       pointsToDraw.add(x);
       pointsToDraw.add(y);
@@ -161,6 +159,7 @@ void draw() {
     drawBackground();
   }
 
+  int start = millis();
   int startingHeadNum = searchHeads.size();
   for (int i = 0; i < startingHeadNum; i++) {
     SearchHead head = searchHeads.get(i);
@@ -168,6 +167,10 @@ void draw() {
 
     pointsToDraw.add(head.currX);
     pointsToDraw.add(head.currY);
+
+    if (random(0, 1) < 0.001) {
+      searchHeads.add(new SearchHead(head.currX, head.currY));
+    }
 
   }
 
@@ -180,9 +183,10 @@ void draw() {
   if (random(0, 1) < 0.001) {
     searchHeads.add(new SearchHead(int(random(0, width)), int(random(0, height))));
   }
-
-
   animatePoints();
+  int end = millis();
+  println(end-start);
+
   updatePixels();
   iteration++;
 }
