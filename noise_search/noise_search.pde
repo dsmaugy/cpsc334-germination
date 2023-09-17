@@ -13,6 +13,7 @@ int BLUE_SKY = 29;
 // looping + time keeping
 int iteration = 0;
 int delayTime = 10;
+int timeSinceBgDraw = -delayTime;
 
 // geometry
 int blockSize = 10;
@@ -81,17 +82,40 @@ boolean withinBounds(int x, int y) {
 }
 
 void setup() {
-    //size(512, 512);
-    fullScreen();
-    bgNoise = new BrownNoise(this);
-    bgNoise.play();
-    bgNoise.amp(0.003);
+  // size(100, 100);
+  fullScreen();
+  bgNoise = new BrownNoise(this);
+  bgNoise.play();
+  bgNoise.amp(0.003);
 
-    searchHeads = new ArrayList<SearchHead>();
-    pointsToDraw = new ArrayDeque<Integer>();
+  // set update speed based on screen dimensions 
+  // TODO: set new head generation rate based off screen size
+  if (width <= 128 || height <= 128) {
+    delayTime = 10;
+  } else if (width <= 256 || height <= 256) {
+    delayTime = 50;
+  } else if (width <= 512 || height <= 512) {
+    delayTime = 100;
+  } else if (width <= 1024 || height <= 1024) {
+    delayTime = 750;
+  } else {
+    delayTime = 2500;
+  }
+  // set the timer back so that we draw right away on first frame
+  timeSinceBgDraw = -delayTime - 5;
+
+  searchHeads = new ArrayList<SearchHead>();
+  pointsToDraw = new ArrayDeque<Integer>();
+
+  for (int j = 0; j < 10; j++) {
+    int clusterWidth = int(random(0, width));
+    int clusterHeight = int(random(0, height));
     for (int i = 0; i < 5; i++) {
-      searchHeads.add(new SearchHead((int) random(0, width-5), (int) random(0, height-5)));
+      searchHeads.add(new SearchHead(clusterWidth + int(random(width/-20, width/20)), clusterHeight + int(random(height/-20, height/20))));
     }
+  }
+
+  noiseDetail(7);
 }
 
 void animatePoints() {
@@ -104,35 +128,37 @@ void animatePoints() {
     for (int j = blockSize/-2; j < blockSize/2; j++) {
       for (int k = blockSize/-2; k < blockSize/2; k++) {
         if (withinBounds(x+j, y+k)) {
-          pixels[(k+y)*width+(j+x)] = color(0, 255, 0);
+          pixels[(k+y)*width+(j+x)] = color(21, 138, 52, 54);
         }
       }
     }
   
-    if (withinBounds(x-5, y-5)) {
-      pointsToDraw.add(x-5);
-      pointsToDraw.add(y-5);
+    if (withinBounds(x, y) && random(0, 1) < 0.65) {
+      pointsToDraw.add(x);
+      pointsToDraw.add(y);
     }
   }
 }
 
-
-void draw() {
-  background(204);
-  loadPixels();
-  noiseDetail(7);
-  // stroke(100, 255, 0);
-  // fill(100, 255, 0);
-
-  // noiseResolution += map(noise(iteration*0.05), 0, 1, -0.0001, 0.0001);
+void drawBackground() {
+  noiseSeed(int(random(0, 100000000)));
   iterationScale += map(noise(iteration*0.02), 0, 1, -0.0005, 0.001);
-  // println(iterationScale);
-  // println(iteration); // combine this with iterationScale to one var
   for (int i = 0; i < width; i++) {
     for (int j = 0; j < height; j++) {
         float red = noise((i+iteration*iterationScale)*noiseResolution, (j+iteration*iterationScale)*noiseResolution) *noiseScale + 20;
         pixels[j*width+i] = color(red, GREEN_SKY, BLUE_SKY);
     }
+  }
+
+  timeSinceBgDraw = millis();
+}
+
+
+void draw() {
+  loadPixels();
+
+  if (millis() - timeSinceBgDraw > delayTime) {
+    drawBackground();
   }
 
   int startingHeadNum = searchHeads.size();
@@ -143,9 +169,6 @@ void draw() {
     pointsToDraw.add(head.currX);
     pointsToDraw.add(head.currY);
 
-    if (random(0, 1) < 0.002) {
-      searchHeads.add(new SearchHead(head.currX, head.currY));
-    }
   }
 
   if (searchHeads.size() > 10) {
@@ -154,9 +177,12 @@ void draw() {
     }
   }
 
+  if (random(0, 1) < 0.001) {
+    searchHeads.add(new SearchHead(int(random(0, width)), int(random(0, height))));
+  }
+
 
   animatePoints();
   updatePixels();
   iteration++;
-  delay(delayTime);
 }
