@@ -79,6 +79,7 @@ boolean withinBounds(int x, int y) {
 
 void setup() {
   // size(100, 100);
+  noCursor();
   fullScreen(P2D, SPAN);
   int numClusters;
   // set update speed based on screen dimensions 
@@ -218,7 +219,7 @@ void draw() {
     }
   }
 
-  delay(50);
+  delay(20);
   updatePixels();
   iteration++;
 }
