@@ -20,4 +20,10 @@ _Germination_ can be run on any device that has a monitor output and supports th
 To facilitate installation and running on an embedded system, a `germination.desktop` file was created and added to the `~/.config/autostart/` on the Raspberry Pi provided for the class.
 
 ## Videos
-<iframe width="560" height="315" src="https://www.youtube.com/embed/XMF0wsTU0vc?si=Dm73YpJdbeU7rtiu" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
+[Startup + Automatic Run on TV Demo](https://youtu.be/XMF0wsTU0vc)
+
+[1024x1024 Canvas Demo](https://youtube.com/shorts/vWqmeOZgUF8)
+
+## Blog
+[Writeup](blogpost.md)
