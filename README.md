@@ -27,3 +27,6 @@ To facilitate installation and running on an embedded system, a `germination.des
 
 ## Blog
 [Writeup](blogpost.md)
+
+## Lab Logs
+Lab logs are located in [lablogs.pdf](lablogs.pdf)
