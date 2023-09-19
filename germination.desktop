@@ -1,6 +1,6 @@
 [Desktop Entry]
 Type=Application
-Name=Wired        
-Comment="Germination" Generative Art Piece   
+Name=Germination        
+Comment=A Generative Art Piece   
 NoDisplay=false
 Exec=/home/student334/processing-4.3/processing-java --sketch=/home/student334/cpsc334/module1-revised/germination --present
