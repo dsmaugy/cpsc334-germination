@@ -21,7 +21,7 @@ To facilitate installation and running on an embedded system, a `germination.des
 
 ## Videos
 
-[Startup + Automatic Run on TV Demo](https://youtu.be/XMF0wsTU0vc)
+[Startup + Automatic Run on TV Demo](https://youtu.be/V2qYnOAsamw)
 
 [1024x1024 Canvas Demo](https://youtube.com/shorts/vWqmeOZgUF8)
 

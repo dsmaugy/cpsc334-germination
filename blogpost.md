@@ -43,7 +43,7 @@ The following video showcases ***********Germination*********** running on my Ra
 
 ## 42in TV Example (Sketch opens at 0:50)
 
-[https://www.youtube.com/watch?v=XMF0wsTU0vc](https://www.youtube.com/watch?v=XMF0wsTU0vc)
+[https://www.youtube.com/watch?v=XMF0wsTU0vc](https://youtu.be/V2qYnOAsamw)
 
 This is a screen-recording from my computer with the sketch running in a 1024x1024 canvas. Please don’t mind the music, I forgot that OBS could pick up my Spotify sounds as well and didn’t realize this until the YouTube video was already uploaded. I don’t think it’s too out-of-place so I kept it in, but this is not a part of the generative piece.
 
