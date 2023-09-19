@@ -1,4 +1,4 @@
-# cpsc334-module-revised
+# Germination
 This repository contains the final production code for Module 1 of CPSC334 taken in the Fall of 2023.
 Due to technical issues, Tasks 1&2 of module 1 had to be modified. This repository contains the work done for the revised module.
 
